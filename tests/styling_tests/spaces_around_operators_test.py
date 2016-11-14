@@ -26,11 +26,11 @@ class TestSpacesAroundOperators(unittest.TestCase):
 
     def test_incorrect_space_before(self):
         exp_result = {"error_key": err_const.NO_SPACE_AROUND_OPERATORS, "error_params": [1]}
-        self.common.spaces_around_operators("a = 1", 1, exp_result)
+        self.common.spaces_around_operators("a= 1", 1, exp_result)
 
     def test_spaces_after_operator(self):
         exp_result = [error.get_error_msg(err_const.NO_SPACE_AROUND_OPERATORS, [1, 1])]
-        self.common.lex_string('this =      "words"', exp_result)
+        self.common.lex_string('this =    "words"', exp_result)
 
     def test_spaces_before_operator(self):
         exp_result = [error.get_error_msg(err_const.NO_SPACE_AROUND_OPERATORS, [1, 1])]
