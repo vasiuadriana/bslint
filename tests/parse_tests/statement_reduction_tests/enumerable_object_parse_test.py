@@ -9,37 +9,37 @@ class TestArgumentParse(unittest.TestCase):
         cls.common = Common()
 
     def test_open_enumerable_object_no_commas(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{a:1\n b:2}")
+        self.common.match_program(const.BLOCK_STMT, "{a:1\n b:2}")
 
     def test_open_enumerable_object_no_commas_all_new_lines(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{\na:1\n b:2\n}")
+        self.common.match_program(const.BLOCK_STMT, "{\na:1\n b:2\n}")
 
     def test_open_enumerable_object_no_commas_start_new_lines(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{\na:1\n b:2}")
+        self.common.match_program(const.BLOCK_STMT, "{\na:1\n b:2}")
 
     def test_open_enumerable_object_commas(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{a:1,\n b:2}")
+        self.common.match_program(const.BLOCK_STMT, "{a:1,\n b:2}")
 
     def test_open_enumerable_object_commas_all_new_lines(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{\na:1,\n b:2\n}")
+        self.common.match_program(const.BLOCK_STMT, "{\na:1,\n b:2\n}")
 
     def test_open_enumerable_object_commas_start_new_lines(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{\na:1,\n b:2}")
+        self.common.match_program(const.BLOCK_STMT, "{\na:1,\n b:2}")
 
     def test_open_enumerable_object_mix_commas_all_new_lines(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{\na:1\n b:2,\nc:3}")
+        self.common.match_program(const.BLOCK_STMT, "{\na:1\n b:2,\nc:3}")
 
     def test_open_curly_bracket_close_curly_bracket(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{}")
+        self.common.match_program(const.BLOCK_STMT, "{}")
 
     def test_open_enumerable_object_single_values(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{a:1}")
+        self.common.match_program(const.BLOCK_STMT, "{a:1}")
 
     def test_open_enumerable_object_two_values(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{a:1, b:2}")
+        self.common.match_program(const.BLOCK_STMT, "{a:1, b:2}")
 
     def test_open_enumerable_object_value_function_call(self):
-        self.common.match_statement(const.ENUMERABLE_OBJECT, "{a: m.id(), b: m.id()}")
+        self.common.match_program(const.BLOCK_STMT, "{a: m.id(), b: m.id()}")
 
     def test_open_square_bracket_close_square_bracket(self):
         self.common.match_statement(const.ENUMERABLE_OBJECT, "[]")

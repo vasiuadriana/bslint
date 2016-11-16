@@ -14,6 +14,7 @@ RULES_LIST = {
         const.FUNCTION_CALL: [([const.FUNCTION_CALL], const.BLOCK_STMT)],
         const.VAR_AS: [([const.VAR_AS], const.BLOCK_STMT)],
         const.RETURN_STMT: [([const.RETURN_STMT], const.BLOCK_STMT)],
+        const.ENUMERABLE_OBJECT: [([const.ENUMERABLE_OBJECT], const.BLOCK_STMT)],
         # endregion
 
         const.END_WHILE: [
@@ -40,6 +41,15 @@ RULES_LIST = {
         ],
         const.ELSE_IF_BLOCK: [([const.ELSE_IF_BLOCK, const.ELSE_IF_BLOCK], const.ELSE_IF_BLOCK)],
         # endregion
+
+        const.CLOSE_ENUMERABLE_OBJECT: [
+            ([const.OPEN_ENUMERABLE_OBJECT, const.CLOSE_ENUMERABLE_OBJECT], const.BLOCK_STMT),
+            ([const.OPEN_ENUMERABLE_OBJECT, const.ASSOCIATIVE_ARRAY_ARGUMENT, const.CLOSE_ENUMERABLE_OBJECT],
+             const.BLOCK_STMT)
+        ],
+        const.ASSOCIATIVE_ARRAY_ARGUMENT: [
+            ([const.ASSOCIATIVE_ARRAY_ARGUMENT, const.ASSOCIATIVE_ARRAY_ARGUMENT], const.ASSOCIATIVE_ARRAY_ARGUMENT)
+        ]
     }
 }
 

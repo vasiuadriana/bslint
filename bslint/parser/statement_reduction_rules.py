@@ -1,5 +1,6 @@
 import bslint.constants as const
 import bslint.parser.rule_builder as rule_builder
+
 RULES_LIST = {
     const.PRIORITY_ZERO: {
         const.ID: [
@@ -21,6 +22,8 @@ RULES_LIST = {
         # end region
         const.RETURN: [([const.RETURN], const.RETURN_STMT)],
         const.EXIT: [([const.EXIT], const.EXIT_STMT)],
+        const.OPEN_CURLY_BRACKET: [([const.OPEN_CURLY_BRACKET], const.OPEN_ENUMERABLE_OBJECT)],
+        const.CLOSE_CURLY_BRACKET: [([const.CLOSE_CURLY_BRACKET], const.CLOSE_ENUMERABLE_OBJECT)],
     },
     const.PRIORITY_ONE: {
         const.ID: [
@@ -264,10 +267,11 @@ RULES_LIST = {
             ([const.OPEN_PARENTHESIS, const.ID, const.CLOSE_PARENTHESIS], const.ID),
             ([const.OPEN_PARENTHESIS, const.VAR_AS, const.CLOSE_PARENTHESIS], const.VAR_AS)
         ],
-        const.CLOSE_CURLY_BRACKET: [
-            ([const.OPEN_CURLY_BRACKET, const.CLOSE_CURLY_BRACKET], const.ENUMERABLE_OBJECT),
-            ([const.OPEN_CURLY_BRACKET, const.ASSOCIATIVE_ARRAY_ARGUMENT, const.CLOSE_CURLY_BRACKET],
-             const.ENUMERABLE_OBJECT)
+        const.CLOSE_ENUMERABLE_OBJECT: [
+            ([const.OPEN_ENUMERABLE_OBJECT, const.CLOSE_ENUMERABLE_OBJECT], const.ENUMERABLE_OBJECT),
+            ([const.OPEN_ENUMERABLE_OBJECT, const.ASSOCIATIVE_ARRAY_ARGUMENT, const.CLOSE_ENUMERABLE_OBJECT],
+             const.ENUMERABLE_OBJECT),
+            ([const.ASSOCIATIVE_ARRAY_ARGUMENT, const.CLOSE_ENUMERABLE_OBJECT], const.CLOSE_ENUMERABLE_OBJECT)
         ],
         const.ASSOCIATIVE_ARRAY_ARGUMENT: [
             ([const.ASSOCIATIVE_ARRAY_ARGUMENT, const.COMMA, const.ASSOCIATIVE_ARRAY_ARGUMENT],
@@ -319,7 +323,7 @@ RULES_LIST = {
             ([const.SEMI_COLON, const.ENUMERABLE_OBJECT], const.PRINT_ARGUMENT),
             ([const.RETURN_STMT, const.ENUMERABLE_OBJECT], const.RETURN_STMT)
         ],
-        const.PARAM:[
+        const.PARAM: [
             ([const.PARAM, const.COMMA, const.PARAM], const.PARAM),
             ([const.COMMA, const.PARAM], const.ARGUMENT),
             ([const.SEMI_COLON, const.PARAM], const.PRINT_ARGUMENT)
@@ -350,6 +354,13 @@ RULES_LIST = {
         ],
         const.WHILE: [([const.EXIT, const.WHILE], const.EXIT)],
         const.FOR: [([const.EXIT, const.FOR], const.EXIT)],
+        const.OPEN_ENUMERABLE_OBJECT: [
+            ([const.ID, const.EQUALS, const.OPEN_ENUMERABLE_OBJECT], const.OPEN_ENUMERABLE_OBJECT)
+        ],
+        const.COMMA: [
+            ([const.OPEN_ENUMERABLE_OBJECT, const.ASSOCIATIVE_ARRAY_ARGUMENT, const.COMMA],
+             const.OPEN_ENUMERABLE_OBJECT),
+            ([const.ASSOCIATIVE_ARRAY_ARGUMENT, const.COMMA], const.ASSOCIATIVE_ARRAY_ARGUMENT)]
     }
 }
 

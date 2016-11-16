@@ -122,7 +122,7 @@ class StylingHandler:
             self._consecutive_empty_lines = 0
 
     def check_end_of_statement(self, lexer):
-        if self._token_lexer_type == const.COLON:
+        if self._token_lexer_type == const.COLON and self.open_curly_braces == 0:
             self.end_of_statement = True
         elif self._token_lexer_type == const.OPEN_CURLY_BRACKET:
             self.open_curly_braces += 1
@@ -132,9 +132,6 @@ class StylingHandler:
                 self._warning_filter(has_trailing_comma)
                 lexer.tokens.pop(-2)
             self.open_curly_braces -= 1
-
-        if self.open_curly_braces != 0:
-            self.end_of_statement = False
 
     def _warning_filter(self, result):
         if result is not None:
