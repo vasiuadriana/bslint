@@ -10,7 +10,7 @@ class TestColon(unittest.TestCase):
     def test_statement_ends_with_colon(self):
         identifier = ":"
         regex_match = regex_handler.find_match(identifier)
-        styling_handler = StylingHandler(identifier)
+        styling_handler = StylingHandler(identifier, Lexer())
         styling_handler.dispatcher = styling_dispatcher.Dispatcher(styling_handler)
         styling_handler.apply_styling(regex_match)
         styling_handler.check_end_of_statement()
@@ -19,4 +19,4 @@ class TestColon(unittest.TestCase):
     def test_statement_ends_with_colon_no_change_line(self):
         identifier = "myVar = value: otherVar = otherValue"
         result = Lexer().lex(identifier)
-        self.assertEqual(result["Tokens"].pop().line_number, 1)
+        self.assertEqual(1, result["Tokens"].pop().line_number)

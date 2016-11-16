@@ -5,6 +5,7 @@ from bslint.lexer.token import Token
 VALUE = "value"
 TYPE = "type"
 
+
 class MatchHandler:
     def __init__(self):
         self._match = None
@@ -27,8 +28,7 @@ class MatchHandler:
             self._match = self._match.group(VALUE)
         else:
             self._match = self._match.group()
-        return Token(self._match, self._token_lexer_type, self._token_parser_type,
-                     token_type=self._type)
+        return Token(self._match, self._token_lexer_type, self._token_parser_type, token_type=self._type)
 
     def _build_id_token(self):
         if self._match.group(TYPE) != '':

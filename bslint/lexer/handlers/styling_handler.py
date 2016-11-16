@@ -1,11 +1,12 @@
 from bslint import constants as const
 from bslint.messages import handler as msg_handler
 from bslint.lexer import commands as commands
+from bslint.lexer.token import Token
 
 
 class StylingHandler:
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, characters):
+    def __init__(self, characters, lexer):
         self._is_empty_line = True
         self._skip_styling_on_file = False
         self._line_not_to_style_check = -1
@@ -22,9 +23,8 @@ class StylingHandler:
         self.end_of_statement = False
         self.open_curly_braces = 0
         self.applied_common_styling = False
-        self.check_remove_trailing_comma = False
-        self.add_object_commas = False
         self.dispatcher = None
+        self.lexer = lexer
 
     def _get_last_line(self):
         last_line = self.characters[:self.current_char_index - 1].split("\n")
@@ -41,7 +41,6 @@ class StylingHandler:
         self.dispatcher.bslint_command_dispatcher[command_type]()
 
     def apply_styling(self, regex_match):
-        self.add_object_commas = False
         self._match = regex_match[const.MATCH]
         self._token_lexer_type = regex_match[const.TOKEN_LEXER_TYPE]
         if regex_match[const.INDENTATION_LEVEL] != const.NO_INDENTATION:
@@ -122,7 +121,6 @@ class StylingHandler:
             self._consecutive_empty_lines = 0
 
     def check_end_of_statement(self):
-        self.check_remove_trailing_comma = False
         if self._token_lexer_type in self.dispatcher.end_of_statement_dispatcher.keys():
             self.dispatcher.end_of_statement_dispatcher[self._token_lexer_type]()
 
@@ -130,7 +128,10 @@ class StylingHandler:
             self.end_of_statement = False
 
     def close_curly_bracket(self):
-        self.check_remove_trailing_comma = True
+        if self.lexer.tokens[-2].parser_type == const.COMMA:
+            has_trailing_comma = commands.check_trailing_comma_in_objects()
+            self._warning_filter(has_trailing_comma)
+            self.lexer.tokens.pop(-2)
         self.open_curly_braces -= 1
 
     def open_curly_bracket(self):
@@ -146,4 +147,12 @@ class StylingHandler:
             self.warnings += [warning]
 
     def _check_add_object_commas(self):
-        self.add_object_commas = self.open_curly_braces != 0
+        if self.open_curly_braces != 0:
+            if self.lexer.tokens[-1].lexer_type != const.OPEN_CURLY_BRACKET and \
+                            self.lexer.tokens[-1].parser_type != const.COMMA:
+                comma_token = Token(",", const.SPECIAL_OPERATOR, const.COMMA, None)
+                comma_token.line_number = self.line_number
+                self.lexer.tokens.append(comma_token)
+                has_no_commas = commands.check_commas_in_objects()
+                self._warning_filter(has_no_commas)
+

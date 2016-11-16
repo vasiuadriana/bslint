@@ -6,9 +6,9 @@ import bslint.lexer.handlers.match_handler as match_handler
 import bslint.lexer.handlers.regex_handler as regex_handler
 import bslint.lexer.handlers.styling_handler as styling_handler
 import bslint.utilities.custom_exceptions as custom_exception
-from bslint.lexer.token import Token
 import bslint.constants as const
 import bslint.lexer.handlers.styling_dispatcher as styling_dispatcher
+from bslint.lexer import commands as commands
 
 MATCH = "match"
 
@@ -27,7 +27,7 @@ class Lexer:
 
     def lex(self, characters):
         self.characters = characters
-        self.handle_style = styling_handler.StylingHandler(characters)
+        self.handle_style = styling_handler.StylingHandler(characters, self)
         self.handle_style.dispatcher = styling_dispatcher.Dispatcher(self.handle_style)
         while self.handle_style.current_char_index < len(self.characters):
             try:
@@ -57,9 +57,7 @@ class Lexer:
                 if token is not None:
                     token.line_number = self.handle_style.line_number
                     self.tokens.append(token)
-            self.add_commas_to_object()
             self.handle_style.check_end_of_statement()
-            self.remove_trailing_comma()
             self.handle_end_of_statement()
 
     def handle_end_of_statement(self):
@@ -67,19 +65,6 @@ class Lexer:
             self.check_statement_validity(self.tokens[self.current_token_index:])
             self.handle_style.end_of_statement = False
             self.current_token_index = len(self.tokens)
-
-    def remove_trailing_comma(self):
-        if self.handle_style.check_remove_trailing_comma:
-            if self.tokens[-2].parser_type == const.COMMA:
-                self.tokens.pop(-2)
-
-    def add_commas_to_object(self):
-        if self.handle_style.add_object_commas:
-            if self.tokens[-1].lexer_type != const.OPEN_CURLY_BRACKET and \
-                            self.tokens[-1].parser_type != const.COMMA:
-                comma_token = Token(",", const.SPECIAL_OPERATOR, const.COMMA, None)
-                comma_token.line_number = self.handle_style.line_number
-                self.tokens.append(comma_token)
 
     def handle_unexpected_token(self):
         end_of_line = self.characters[self.handle_style.current_char_index:].split("\n")[0]
