@@ -155,4 +155,3 @@ class StylingHandler:
                 self.lexer.tokens.append(comma_token)
                 has_no_commas = commands.check_commas_in_objects()
                 self._warning_filter(has_no_commas)
-

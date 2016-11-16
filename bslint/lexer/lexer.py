@@ -8,7 +8,6 @@ import bslint.lexer.handlers.styling_handler as styling_handler
 import bslint.utilities.custom_exceptions as custom_exception
 import bslint.constants as const
 import bslint.lexer.handlers.styling_dispatcher as styling_dispatcher
-from bslint.lexer import commands as commands
 
 MATCH = "match"
 
